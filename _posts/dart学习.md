@@ -1,0 +1,369 @@
+现在的dart版本2.7.2
+
+**dart中所有类型都是对象,包括int，String，double**
+
+**Dart’s type safety (dart类型安全)**
+
+
+
+## 内置类型
+
+### 类型安全检测
+
+numbers，strings，booleans，lists，sets，maps，runes，symbols
+
+
+
+```
+// Check for an empty string.
+var fullName = '';
+assert(fullName.isEmpty);
+
+// Check for zero.
+var hitPoints = 0;
+assert(hitPoints <= 0);
+
+// Check for null.
+var unicorn;
+assert(unicorn == null);
+
+// Check for NaN.
+var iMeantToDoThis = 0 / 0;
+assert(iMeantToDoThis.isNaN);
+```
+
+### numbers
+
+int: 64位 
+
+double: 64位，IEEE754标准
+
+#### 运算规则
+
+`dart:math`库
+
++，-，/，*, 
+
+abs()：此属性用于返回表示数字绝对值
+
+ceil()：此属性返回上限值，即大于或等于数字的最小整数。
+
+floor(）：此属性返回上限值，即小于或等于数字的最大整数。
+
+##### 按位移位（<<，>>）&AND（＆）和OR（|）
+
+```
+assert((3 << 1) == 6); // 0011 << 1 == 0110
+assert((3 >> 1) == 1); // 0011 >> 1 == 0001
+assert((3 | 4) == 7); // 0011 | 0100 == 0111
+```
+
+#### number字面量
+
+在Dart 2.1之前，在双精度上下文中使用整数文字是错误的。
+
+从Dart 2.1开始，整数文字会在必要时自动转换为double：
+
+
+
+
+
+
+
+#### 字符串<->number
+
+```
+// String -> int
+var one = int.parse('1');
+
+// String -> double
+var onePointOne = double.parse('1.1');
+
+// int -> String
+String oneAsString = 1.toString();
+
+// double -> String
+String piAsString = 3.14159.toStringAsFixed(2);
+
+```
+
+### Strings
+
+#### String字面量
+
+''和“”都可以表示字符串，
+
+可以是用`${}`在字面量中直接使用变量，执行代码时，dart会调用对象的`toString()`方法
+
+#### 多行文本(```)
+
+```
+var s1 = '''
+You can create
+multi-line strings like this one.
+''';
+
+var s2 = """This is also a
+multi-line string.""";
+```
+
+#### 单行文本(r)
+
+```
+var s = r'In a raw string, not even \n gets special treatment.';
+```
+
+### Boolean
+
+
+
+### List
+
+
+
+#### spread（...）&null-aware spread(...?)(Dart 2.3)
+
+```
+var list = [1, 2, 3];
+var list2 = [0, ...list];
+assert(list2.length == 4);
+
+var list;
+var list2 = [0, ...?list];
+assert(list2.length == 1);
+```
+
+
+
+#### collection if & collection for
+
+```
+var nav = [
+  'Home',
+  'Furniture',
+  'Plants',
+  if (promoActive) 'Outlet'
+];
+
+var listOfInts = [1, 2, 3];
+var listOfStrings = [
+  '#0',
+  for (var i in listOfInts) '#$i'
+];
+assert(listOfStrings[1] == '#1');
+```
+
+
+
+### Map
+
+```
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+```
+
+#### 添加
+
+```
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds'; // Add a key-value pair
+```
+
+#### 查找
+
+```
+var gifts = {'first': 'partridge'};
+assert(gifts['first'] == 'partridge');//不存在返回null
+```
+
+#### 统计（.length）
+
+#### 常量（final）
+
+```
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // Uncommenting this causes an error.
+```
+
+#### （`...`和`...?`）和集合ifs和fors
+
+从Dart 2.3开始，集合像列表一样支持散布运算符（`...`和`...?`）和集合ifs和fors
+
+
+
+
+
+### Set(无序集合)
+
+```
+var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
+
+var names = <String>{};
+// Set<String> names = {}; // This works, too.
+// var names = {}; // Creates a map, not a set.
+```
+
+#### 方法
+
+add()
+
+addAll()
+
+从Dart 2.3开始，集合像列表一样支持散布运算符（`...`和`...?`）和集合ifs和fors
+
+
+
+#### 常量（final）
+
+```
+final constantSet = const {
+  'fluorine',
+  'chlorine',
+  'bromine',
+  'iodine',
+  'astatine',
+};
+// constantSet.add('helium'); // Uncommenting this causes an error.
+```
+
+
+
+### Function
+
+函数也是对象。具有类型Function
+
+```
+bool isNoble(int atomicNumber) {
+  return _nobleGases[atomicNumber] != null;
+}
+```
+
+
+
+#### =>
+
+```
+bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;
+```
+
+
+
+#### 命名参数
+
+```
+void enableFlags({bool bold, bool hidden}) {...}
+```
+
+#### 可选参数
+
+```dart
+const Scrollbar({Key key, @required Widget child})
+```
+
+Position 参数
+
+```
+普通
+String say(String from, String msg,
+    [String device = 'carrier pigeon', String mood]) {
+  var result = '$from says $msg';
+  if (device != null) {
+    result = '$result with a $device';
+  }
+  if (mood != null) {
+    result = '$result (in a $mood mood)';
+  }
+  return result;
+}
+
+assert(say('Bob', 'Howdy') ==
+    'Bob says Howdy with a carrier pigeon');
+
+Map作为可选
+void doStuff(
+    {List<int> list = const [1, 2, 3],
+    Map<String, String> gifts = const {
+      'first': 'paper',
+      'second': 'cotton',
+      'third': 'leather'
+    }}) {
+  print('list:  $list');
+  print('gifts: $gifts');
+}
+```
+
+
+
+#### 匿名函数（Anonymous functions）lambda或者闭包(closure)
+
+```
+var list = ['apples', 'bananas', 'oranges'];
+list.forEach((item) {
+  print('${list.indexOf(item)}: $item');
+});
+```
+
+#### 作用域范围（Lexical scope）
+
+```
+bool topLevel = true;
+
+void main() {
+  var insideMain = true;
+
+  void myFunction() {
+    var insideFunction = true;
+
+    void nestedFunction() {
+      var insideNestedFunction = true;
+
+      assert(topLevel);
+      assert(insideMain);
+      assert(insideFunction);
+      assert(insideNestedFunction);
+    }
+  }
+}
+```
+
+
+
+#### 闭包（Lexical closures）
+
+```
+/// Returns a function that adds [addBy] to the
+/// function's argument.
+Function makeAdder(num addBy) {
+  return (num i) => addBy + i;
+}
+
+void main() {
+  // Create a function that adds 2.
+  var add2 = makeAdder(2);
+
+  // Create a function that adds 4.
+  var add4 = makeAdder(4);
+
+  assert(add2(3) == 5);
+  assert(add4(3) == 7);
+}
+```
+
+
+
+### forEach和map方法使用
