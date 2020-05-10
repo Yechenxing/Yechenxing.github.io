@@ -1,3 +1,17 @@
+---
+layout:     post
+title:      dar基础
+subtitle:   dart基础
+date:       2020-05-09
+author:     Hyh
+header-img: img/post-bg-ios9-web.jpg
+catalog: true
+tags:
+    - dart
+    - flutter
+    - 基础
+---
+
 现在的dart版本2.7.2
 
 **dart中所有类型都是对象,包括int，String，double**
